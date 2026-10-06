@@ -79,7 +79,7 @@ draft: false              # true hides the item everywhere
 - Tone and terminology should match the rest of the site (e.g. the insurance terms used in `services`/`faq`/`claims`). Do not describe Apollo as serving only Chinese clients; the team serves clients in French, English, Mandarin and Cantonese.
 - **Industry/local news: summarize in our own words and link to the source** (`source` field); never reprint articles or copy their images. Add a short "what this means for you" angle where relevant — that is the value we add.
 - Do not invent facts, figures, dates, quotes or regulatory details. Anything missing from what the user provided that the article needs → ask, or check an authoritative source and cite it. Apollo is a partner of AssurPV, not an insurer or claims adjuster — avoid wording that implies Apollo makes coverage or claims decisions.
-- Workflow per item: write the four files → `npm run build` (must pass) → show the user the Chinese version (and anything uncertain) → commit and push to both remotes only after the user confirms.
+- Workflow per item: write the four files → `npm run build` (must pass) → show the user the Chinese version (and anything uncertain) → commit and push to `origin` only after the user confirms.
 
 ### Contact form
 
@@ -97,13 +97,11 @@ Tailwind CSS (via `@astrojs/tailwind`) with a custom brand palette defined in `t
 
 `netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. A catch-all redirect (`/*` → `/index.html`, 200) is in place for client-side routing. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
 
-Cloudflare (DNS) and Netlify (hosting) are managed under the `apolloassurance@gmail.com` account; API tokens for both are kept locally in a git-ignored `.secret` file (not committed).
+Netlify (hosting) is managed under the `info@apolloins.ca` account: site `superb-caramel-0ef0d0`, serving `www.apolloins.ca`, auto-deploying from `apolloins/apollo` `main`. The site env vars `RESEND_API_KEY`, `ADMIN_EMAIL` and `FROM_EMAIL` live only in Netlify. Cloudflare (DNS + proxy) is still under `apolloassurance@gmail.com`, and the Resend key in use still belongs to the old Resend account (`notifications.apolloins.ca` is verified only there). The site was moved from the old Netlify account (`apolloassurance@gmail.com`, site `apolloassurance`) on 2026-10-06; the old site is kept, without a domain, as a fallback. API tokens are kept locally outside the repo (git-ignored `.secret` / `.env`), never committed.
 
 ### Git remotes
 
-Two GitHub remotes are kept in sync — there is no GitLab/`origin` remote:
+- `origin` — `apolloins/apollo` (company account, `info@apolloins.ca`). Primary; pushing `main` here deploys the site.
+- `apolloassurance/apollo` (old company account) and `adamscao/apollo` (personal account) are older copies. They are not configured as remotes in clones made from `apolloins` and are no longer deploy sources.
 
-- `deploy` — `apolloassurance/apollo` (company account, `apolloassurance@gmail.com`). Treat as primary/upstream.
-- `github` — `adamscao/apollo` (personal account).
-
-Push to **both** remotes when publishing changes (`git push deploy main && git push github main`). Each remote authenticates with a different SSH key; the identity mapping is configured locally per clone (`core.sshCommand` in `.git/config` plus a dispatch script in `.git/`, not in `~/.ssh/config`), so it isn't visible in tracked files and must be set up again on a fresh clone.
+SSH identity per account is selected through host aliases in `~/.ssh/config` (e.g. `github-info:apolloins/apollo.git`), so it must be set up once per machine.
