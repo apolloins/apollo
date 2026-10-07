@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const adminEmail = process.env.ADMIN_EMAIL || 'info@apolloins.ca';
-const fromEmail = process.env.FROM_EMAIL || 'noreply@notifications.apolloins.ca';
+const fromEmail = process.env.FROM_EMAIL || 'noreply@apolloins.ca';
 
 // Subject translations
 const subjectTranslations = {

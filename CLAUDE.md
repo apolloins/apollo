@@ -85,7 +85,7 @@ draft: false              # true hides the item everywhere
 
 The contact form (`src/pages/{lang}/contact.astro`) submits via `fetch` to `/.netlify/functions/submit-contact`, handled by `netlify/functions/submit-contact.js`. That function:
 
-- Uses `Resend` (env var `RESEND_API_KEY`) to send two emails per submission: a localized confirmation to the submitter and a notification to `ADMIN_EMAIL` (default `info@apolloins.ca`), from `FROM_EMAIL` (default `noreply@notifications.apolloins.ca`).
+- Uses `Resend` (env var `RESEND_API_KEY`) to send two emails per submission: a localized confirmation to the submitter and a notification to `ADMIN_EMAIL` (default `info@apolloins.ca`), from `FROM_EMAIL` (default `noreply@apolloins.ca`).
 - Selects email copy/subject based on the `lang` field in the POST body (`zh`/`zh-hant`/`en`/`fr`), with English as the fallback.
 - All four languages' email templates and subject-line translations live inline in this one file — keep them in sync when editing the confirmation/admin templates or the subject list.
 
@@ -97,7 +97,7 @@ Tailwind CSS (via `@astrojs/tailwind`) with a custom brand palette defined in `t
 
 `netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. A catch-all redirect (`/*` → `/index.html`, 200) is in place for client-side routing. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
 
-Netlify (hosting) is managed under the `info@apolloins.ca` account: site `superb-caramel-0ef0d0`, serving `www.apolloins.ca`, auto-deploying from `apolloins/apollo` `main`. The site env vars `RESEND_API_KEY`, `ADMIN_EMAIL` and `FROM_EMAIL` live only in Netlify. Cloudflare (DNS + proxy) is still under `apolloassurance@gmail.com`, and the Resend key in use still belongs to the old Resend account (`notifications.apolloins.ca` is verified only there). The site was moved from the old Netlify account (`apolloassurance@gmail.com`, site `apolloassurance`) on 2026-10-06; the old site is kept, without a domain, as a fallback. API tokens are kept locally outside the repo (git-ignored `.secret` / `.env`), never committed.
+Netlify (hosting) is managed under the `info@apolloins.ca` account: site `superb-caramel-0ef0d0`, serving `www.apolloins.ca`, auto-deploying from `apolloins/apollo` `main`. The site env vars `RESEND_API_KEY`, `ADMIN_EMAIL` and `FROM_EMAIL` live only in Netlify. Cloudflare (DNS + proxy) and Resend are under the same account; Resend sends from the verified domain `apolloins.ca` (DNS records `resend._domainkey`, `send`, `rsend`, `_dmarc` in Cloudflare), so the sender must be `@apolloins.ca`, not the former `@notifications.apolloins.ca`. The site was moved from the old Netlify account (`apolloassurance@gmail.com`, site `apolloassurance`) on 2026-10-06; the old site is kept, without a domain, as a fallback. API tokens are kept locally outside the repo (git-ignored `.secret` / `.env`), never committed.
 
 ### Git remotes
 
