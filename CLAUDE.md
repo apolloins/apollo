@@ -79,7 +79,7 @@ draft: false              # true hides the item everywhere
 - Tone and terminology should match the rest of the site (e.g. the insurance terms used in `services`/`faq`/`claims`). Do not describe Apollo as serving only Chinese clients; the team serves clients in French, English, Mandarin and Cantonese.
 - **Industry/local news: summarize in our own words and link to the source** (`source` field); never reprint articles or copy their images. Add a short "what this means for you" angle where relevant — that is the value we add.
 - Do not invent facts, figures, dates, quotes or regulatory details. Anything missing from what the user provided that the article needs → ask, or check an authoritative source and cite it. Apollo is a partner of AssurPV, not an insurer or claims adjuster — avoid wording that implies Apollo makes coverage or claims decisions.
-- Workflow per item: write the four files → `npm run build` (must pass) → show the user the Chinese version (and anything uncertain) → commit and push to `origin` only after the user confirms.
+- Workflow per item: write the four files → `npm run build` (must pass) → commit and push (see **Publishing** under Deployment) → show the user the Chinese version and anything uncertain.
 
 ### FAQ
 
@@ -93,7 +93,7 @@ A phone-first guide to the Quebec joint accident report (Constat amiable, GAA 20
 
 - Content: `src/lib/constat/{zh,zh-hant,en,fr}.ts` (`zh-hant` generated from `zh` with OpenCC, then hand-fixed); links and types in `src/lib/constat/index.ts`; rendering in `src/components/ConstatGuide.astro`. Keep the page static and light (no scripts, no external resources): it is read at the roadside.
 - French labels must stay exactly as printed on the official form; `public/documents/constat-amiable-2023-cn.pdf` is the printable reference translation and the two must agree. The scene steps mirror the FAQ item `minor-accident-first-steps`.
-- Wording is reference material, not advice; changes to it are reviewed by Jacques before going live.
+- Wording is reference material, not advice. Do not add insurance facts that are not on the official form, in the reference PDF or in the FAQ.
 
 ### Contact form
 
@@ -109,7 +109,9 @@ Tailwind CSS (via `@astrojs/tailwind`) with a custom brand palette defined in `t
 
 ### Deployment
 
-`netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. Unknown URLs get `dist/404.html` (there is no catch-all redirect; the site has no client-side routing). `netlify.toml` defines the short links `/shigu` and `/constat` → `/zh/constat`, and `/faq` → `/zh/faq`; they are meant for print and QR codes, so keep them working. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
+`netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. Unknown URLs get `dist/404.html` (there is no catch-all redirect; the site has no client-side routing). `netlify.toml` defines the short links `/shigu` and `/constat` → `/zh/constat`, and `/faq` → `/zh/faq`; they are meant for print and QR codes, so keep them working. `@astrojs/sitemap` writes `sitemap-index.xml` (language pages only), referenced from `public/robots.txt`.
+
+**Publishing** (decided 2026-10-08): finished changes are merged straight into `main` and pushed, which deploys them; Jacques reviews the live version afterwards. Do not wait for confirmation, but always tell the user what went live and list any wording that is new or uncertain so it can be reviewed. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
 
 Netlify (hosting) is managed under the `info@apolloins.ca` account: site `superb-caramel-0ef0d0`, serving `www.apolloins.ca`, auto-deploying from `apolloins/apollo` `main`. The site env vars `RESEND_API_KEY`, `ADMIN_EMAIL` and `FROM_EMAIL` live only in Netlify. Cloudflare (DNS + proxy) and Resend are under the same account; Resend sends from the verified domain `apolloins.ca` (DNS records `resend._domainkey`, `send`, `rsend`, `_dmarc` in Cloudflare), so the sender must be `@apolloins.ca`, not the former `@notifications.apolloins.ca`. The site was moved from the old Netlify account (`apolloassurance@gmail.com`, site `apolloassurance`) on 2026-10-06; the old site is kept, without a domain, as a fallback. API tokens are kept locally outside the repo (git-ignored `.secret` / `.env`), never committed.
 
