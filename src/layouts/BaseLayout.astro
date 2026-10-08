@@ -9,13 +9,16 @@ export interface Props {
   title: string;
   description?: string;
   lang: 'zh' | 'zh-hant' | 'en' | 'fr';
+  // Share-card image, as a site-relative path
+  image?: string;
 }
 
 // Destructure props with defaults
 const { 
   title, 
   description = "阿波罗保险公司 - 专业的房屋、汽车和商业保险服务", 
-  lang = "zh"
+  lang = "zh",
+  image = "/apple-touch-icon.png"
 } = Astro.props;
 
 // Language mapping for UI elements
@@ -102,12 +105,22 @@ const currentPath = Astro.url.pathname;
 // 'zh-hant' must be matched before 'zh' so it isn't read as '/zh' + '-hant'.
 // Flags (public/flags, from the MIT-licensed flag-icons package): Traditional
 // Chinese deliberately uses the Hong Kong flag.
+const localePrefix = /^\/(zh-hant|zh|en|fr)(?=\/|$)/;
 const languages = [
   { code: 'zh', label: '简体中文', flag: '/flags/cn.svg' },
   { code: 'zh-hant', label: '繁體中文', flag: '/flags/hk.svg' },
   { code: 'en', label: 'English', flag: '/flags/gb.svg' },
   { code: 'fr', label: 'Français', flag: '/flags/fr.svg' }
-].map(l => ({ ...l, path: currentPath.replace(/^\/(zh-hant|zh|en|fr)(?=\/|$)/, `/${l.code}`) }));
+].map(l => ({
+  ...l,
+  // Pages outside the language trees (e.g. 404) link to each home page instead.
+  path: localePrefix.test(currentPath) ? currentPath.replace(localePrefix, `/${l.code}`) : `/${l.code}`
+}));
+
+// Absolute URLs for the canonical link, hreflang alternates and share cards
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const hreflang = (code: string) => (code === 'zh-hant' ? 'zh-Hant' : code === 'zh' ? 'zh-Hans' : code);
+const isLocalized = localePrefix.test(currentPath);
 
 // Chinese variants share most footer copy; pick by script where it differs.
 const isZh = lang === 'zh' || lang === 'zh-hant';
@@ -125,6 +138,14 @@ const zhT = (hans: string, hant: string) => (lang === 'zh-hant' ? hant : hans);
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Apollo Insurance</title>
+    <link rel="canonical" href={absolute(currentPath)} />
+    {isLocalized && languages.map(l => <link rel="alternate" hreflang={hreflang(l.code)} href={absolute(l.path)} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Apollo Insurance" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={absolute(currentPath)} />
+    <meta property="og:image" content={absolute(image)} />
   </head>
   <body>
     <header class="bg-white shadow-md fixed w-full top-0 z-50">
@@ -156,7 +177,7 @@ const zhT = (hans: string, hant: string) => (lang === 'zh-hant' ? hant : hans);
                   href={l.path}
                   title={l.label}
                   aria-label={l.label}
-                  hreflang={l.code === 'zh-hant' ? 'zh-Hant' : l.code === 'zh' ? 'zh-Hans' : l.code}
+                  hreflang={hreflang(l.code)}
                   aria-current={lang === l.code ? 'true' : undefined}
                   class={`block rounded-sm transition ${lang === l.code ? 'ring-2 ring-primary ring-offset-1' : 'opacity-60 hover:opacity-100'}`}
                 >

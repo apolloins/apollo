@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getFaq, faqStrings, type Lang } from '../lib/faq';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = faqStrings[lang];
+const faqGroups = getFaq(lang);
+---
+
+<BaseLayout title={t.title} description={t.subtitle} lang={lang}>
+  <section class="bg-gradient-to-r from-primary to-accent text-white py-12 md:py-16">
+    <div class="container">
+      <h1 class="text-center">{t.title}</h1>
+      <p class="text-center max-w-3xl mx-auto mt-4">{t.subtitle}</p>
+    </div>
+  </section>
+
+  <section class="py-16">
+    <div class="container">
+      <div class="mb-12">
+        <h2 class="text-center mb-8">{t.categories}</h2>
+        <div class="flex flex-wrap justify-center gap-4">
+          {faqGroups.map((group, index) => (
+            <a href={`#section-${index}`} class="px-4 py-2 bg-light rounded-full text-primary hover:bg-primary hover:text-white transition-colors">
+              {group.title}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {faqGroups.map((group, groupIndex) => (
+        <div id={`section-${groupIndex}`} class="mb-16 last:mb-0 scroll-mt-24">
+          <h2 class="text-2xl font-bold mb-6 border-b pb-2">{group.title}</h2>
+          <div class="space-y-6">
+            {group.items.map(item => (
+              <div class="border border-gray-200 rounded-lg overflow-hidden">
+                <details class="group">
+                  <summary class="flex justify-between items-center cursor-pointer p-6 bg-light">
+                    <h3 class="text-lg font-semibold">{item.question}</h3>
+                    <span class="text-primary transform group-open:rotate-180 transition-transform">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div class="p-6 pt-0">
+                    <div class="space-y-3" set:html={item.answer}></div>
+                    <a href={`/${lang}/faq/${item.slug}`} class="inline-flex items-center mt-4 text-sm text-primary hover:underline">
+                      {t.open}
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 ml-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
+                </details>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div class="bg-light p-8 rounded-lg text-center">
+        <h2 class="text-2xl font-bold mb-4">{t.notFoundTitle}</h2>
+        <p class="mb-6">{t.notFoundText}</p>
+        <a href={`/${lang}/contact`} class="btn-primary">{t.contact}</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Smooth-scroll the category links, leaving room for the fixed header
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('a[href^="#section-"]').forEach(anchor => {
+        anchor.addEventListener('click', e => {
+          e.preventDefault();
+          const target = document.querySelector<HTMLElement>(anchor.getAttribute('href')!);
+          if (target) window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+        });
+      });
+    });
+  </script>
+</BaseLayout>

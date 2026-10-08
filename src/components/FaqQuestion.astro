@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getFaq, faqStrings, excerpt, type Lang, type FaqItem } from '../lib/faq';
+
+interface Props { lang: Lang; item: FaqItem }
+const { lang, item } = Astro.props;
+const t = faqStrings[lang];
+const group = getFaq(lang)[item.group];
+const related = group.items.filter(i => i.slug !== item.slug);
+const description = excerpt(item.answer);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [{
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: excerpt(item.answer, 5000) }
+  }]
+};
+---
+
+<BaseLayout title={item.question} description={description} lang={lang}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="py-12">
+    <div class="container max-w-3xl">
+      <a href={`/${lang}/faq#section-${item.group}`} class="text-primary hover:underline">← {t.back}</a>
+      <p class="mt-6 mb-3">
+        <span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-sm font-medium">{group.title}</span>
+      </p>
+      <h1 class="text-2xl md:text-3xl lg:text-3xl font-bold mb-6">{item.question}</h1>
+      <div class="bg-white rounded-lg shadow-sm p-6 space-y-3 text-lg leading-relaxed" set:html={item.answer}></div>
+      <p class="mt-4 text-sm text-dark/70">{t.disclaimer}</p>
+
+      <h2 class="text-xl md:text-xl lg:text-xl font-bold mt-12 mb-4">{t.related}</h2>
+      <ul class="space-y-2">
+        {related.map(r => (
+          <li>
+            <a href={`/${lang}/faq/${r.slug}`} class="block bg-white rounded-lg shadow-sm px-4 py-3 text-primary hover:underline">{r.question}</a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="bg-white p-8 rounded-lg text-center mt-12">
+        <h2 class="text-xl md:text-xl lg:text-xl font-bold mb-4">{t.notFoundTitle}</h2>
+        <p class="mb-6">{t.notFoundText}</p>
+        <a href={`/${lang}/contact`} class="btn-primary">{t.contact}</a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

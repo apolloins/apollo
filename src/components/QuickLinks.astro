@@ -1,0 +1,65 @@
+---
+// Home-page shortcuts to the two things visitors come back for: the FAQ and
+// the joint accident report guide.
+interface Props { lang: 'zh' | 'zh-hant' | 'en' | 'fr' }
+const { lang } = Astro.props;
+
+const strings = {
+  zh: {
+    heading: '常用工具',
+    faqTitle: '保险常见问题',
+    faqText: '魁北克车险怎么赔、谁来赔、保费受什么影响。每个问题都可以单独转发给朋友。',
+    faqCta: '查看问答',
+    constatTitle: '事故联合报告单 · 中文对照',
+    constatText: '出了事故？用手机逐栏对照法语表格的中文意思，并查看现场该做什么。建议提前打印一份放在车上。',
+    constatCta: '打开对照表'
+  },
+  'zh-hant': {
+    heading: '常用工具',
+    faqTitle: '保險常見問題',
+    faqText: '魁北克車險怎麼賠、誰來賠、保費受什麼影響。每個問題都可以單獨轉發給朋友。',
+    faqCta: '查看問答',
+    constatTitle: '事故聯合報告單 · 中文對照',
+    constatText: '出了事故？用手機逐欄對照法語表格的中文意思，並查看現場該做什麼。建議提前打印一份放在車上。',
+    constatCta: '打開對照表'
+  },
+  en: {
+    heading: 'Handy Resources',
+    faqTitle: 'Insurance FAQ',
+    faqText: 'How Quebec auto insurance pays, who pays, and what affects your premium. Each question has its own page you can share.',
+    faqCta: 'Browse the FAQ',
+    constatTitle: 'Joint Report Field Guide',
+    constatText: 'Had an accident? Look up what each field of the French form means on your phone, and see what to do at the scene. Better still, keep a printed form in the car.',
+    constatCta: 'Open the guide'
+  },
+  fr: {
+    heading: 'Outils pratiques',
+    faqTitle: 'FAQ sur l’assurance',
+    faqText: 'Comment l’assurance auto indemnise au Québec, qui paie et ce qui influence votre prime. Chaque question a sa propre page, facile à partager.',
+    faqCta: 'Consulter la FAQ',
+    constatTitle: 'Guide du constat amiable',
+    constatText: 'Un accident? Consultez sur votre téléphone la marche à suivre sur les lieux et le contenu du formulaire. Encore mieux : gardez un formulaire imprimé dans la voiture.',
+    constatCta: 'Ouvrir le guide'
+  }
+};
+const t = strings[lang];
+const cards = [
+  { href: `/${lang}/constat`, title: t.constatTitle, text: t.constatText, cta: t.constatCta },
+  { href: `/${lang}/faq`, title: t.faqTitle, text: t.faqText, cta: t.faqCta }
+];
+---
+
+<section class="py-12 bg-white">
+  <div class="container">
+    <h2 class="text-center mb-8">{t.heading}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      {cards.map(card => (
+        <a href={card.href} class="block bg-light rounded-lg border-l-4 border-secondary p-6 hover:shadow-md transition-shadow">
+          <h3 class="text-xl md:text-xl lg:text-2xl text-primary mb-2">{card.title}</h3>
+          <p class="mb-4">{card.text}</p>
+          <span class="text-primary font-medium">{card.cta} →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

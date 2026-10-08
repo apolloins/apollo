@@ -6,7 +6,19 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Short links for print, QR codes and word of mouth. They are printed on
+# paper, so keep them working; change only the target.
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  from = "/shigu"
+  to = "/zh/constat"
+  status = 302
+
+[[redirects]]
+  from = "/constat"
+  to = "/zh/constat"
+  status = 302
+
+[[redirects]]
+  from = "/faq"
+  to = "/zh/faq"
+  status = 302

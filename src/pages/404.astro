@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Served by Netlify for any unknown URL. The visitor's language is unknown
+// here, so the page is short and offers all four.
+const homes = [
+  { href: '/zh', label: '简体中文' },
+  { href: '/zh-hant', label: '繁體中文' },
+  { href: '/en', label: 'English' },
+  { href: '/fr', label: 'Français' }
+];
+---
+
+<BaseLayout title="404" description="Page not found" lang="zh">
+  <section class="py-20">
+    <div class="container max-w-xl text-center">
+      <p class="text-6xl font-bold text-primary mb-6">404</p>
+      <h1 class="text-2xl md:text-2xl lg:text-2xl mb-2">找不到这个页面</h1>
+      <p class="mb-8 text-dark/70">Page not found · Page introuvable</p>
+      <div class="grid grid-cols-2 gap-3 mb-8">
+        {homes.map(h => <a href={h.href} class="btn-primary text-center">{h.label}</a>)}
+      </div>
+      <p class="space-x-4">
+        <a href="/zh/faq" class="text-primary hover:underline">保险常见问题</a>
+        <a href="/zh/constat" class="text-primary hover:underline">事故联合报告单对照表</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

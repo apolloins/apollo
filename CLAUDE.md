@@ -32,13 +32,13 @@ The site is available in four languages with no use of Astro's built-in i18n rou
 - `src/pages/en/*` — English
 - `src/pages/fr/*` — French
 
-Each tree has the same eight pages: `index`, `about`, `services`, `team`, `claims`, `faq`, `news`, `contact`, plus `news/[slug].astro` for individual news articles (see **News** below). `src/pages/index.astro` (the site root) does a client-side redirect to `/zh/`.
+Each tree has the same nine pages: `index`, `about`, `services`, `team`, `claims`, `constat`, `faq`, `news`, `contact`, plus `news/[slug].astro` for individual news articles (see **News** below) and `faq/[slug].astro` for individual questions (see **FAQ** below). `src/pages/404.astro` sits outside the language trees. `src/pages/index.astro` (the site root) does a client-side redirect to `/zh/`.
 
-**When adding, removing, or restructuring a page, the change must be replicated across all four language directories** to keep them in sync. There's no shared content source — each locale's copy is written directly into its own `.astro` file.
+**When adding, removing, or restructuring a page, the change must be replicated across all four language directories** to keep them in sync. Most pages have no shared content source — each locale's copy is written directly into its own `.astro` file. The exceptions are news, the FAQ and the joint report guide, whose pages are thin wrappers around a shared component and per-language content in `src/lib/`.
 
 ### Layouts
 
-- `src/layouts/BaseLayout.astro` is the real layout used by every page. It takes `title`, `description`, and `lang` (`'zh' | 'zh-hant' | 'en' | 'fr'`) props, and contains inline per-language UI strings (nav labels, footer copy, language-switcher labels) in a `uiText`/translation-object pattern. Header nav links and the language switcher are generated from `lang` and `Astro.url.pathname`, so cross-language links are produced by swapping the `/zh-hant|zh|en|fr` path prefix rather than through routing config (`zh-hant` must be matched before `zh`).
+- `src/layouts/BaseLayout.astro` is the real layout used by every page. It takes `title`, `description`, an optional share-card `image`, and `lang` (`'zh' | 'zh-hant' | 'en' | 'fr'`) props, and contains inline per-language UI strings (nav labels, footer copy, language-switcher labels) in a `uiText`/translation-object pattern. Header nav links and the language switcher are generated from `lang` and `Astro.url.pathname`, so cross-language links are produced by swapping the `/zh-hant|zh|en|fr` path prefix rather than through routing config (`zh-hant` must be matched before `zh`). It also emits the canonical link, hreflang alternates and Open Graph tags, built from `site` in `astro.config.mjs`.
 - `src/layouts/Layout.astro` is the unmodified Astro starter template — not used by any real page. Leave it alone or remove it; don't build new pages on it.
 
 New pages/sections should follow the same pattern as existing ones: add localized strings inline (or in a small object) per page/component rather than introducing a new i18n mechanism, unless asked to.
@@ -81,6 +81,20 @@ draft: false              # true hides the item everywhere
 - Do not invent facts, figures, dates, quotes or regulatory details. Anything missing from what the user provided that the article needs → ask, or check an authoritative source and cite it. Apollo is a partner of AssurPV, not an insurer or claims adjuster — avoid wording that implies Apollo makes coverage or claims decisions.
 - Workflow per item: write the four files → `npm run build` (must pass) → show the user the Chinese version (and anything uncertain) → commit and push to `origin` only after the user confirms.
 
+### FAQ
+
+- Content: `src/lib/faq/{zh,zh-hant,en,fr}.ts`, one `faqGroups` array per language (answers are HTML strings). The four files hold the same questions in the same order.
+- `src/lib/faq/index.ts` attaches a URL slug to each question by position (`SLUGS`), holds the UI strings, and fails the build if a language's group or question counts drift from the slug list. Slugs are public, shared URLs: never rename or reorder them. To add a question, add it at the same position in all four files and insert its slug at the matching position.
+- Rendering: `src/components/FaqList.astro` (`/{lang}/faq`, accordion) and `src/components/FaqQuestion.astro` (`/{lang}/faq/<slug>`, one question per page with FAQPage JSON-LD, so a single question can be shared or found by search).
+
+### Joint report guide (`/{lang}/constat`)
+
+A phone-first guide to the Quebec joint accident report (Constat amiable, GAA 2023 form): what to do at the scene and what each field of the French form means. It is the target of the `/shigu` short link and of printed QR codes.
+
+- Content: `src/lib/constat/{zh,zh-hant,en,fr}.ts` (`zh-hant` generated from `zh` with OpenCC, then hand-fixed); links and types in `src/lib/constat/index.ts`; rendering in `src/components/ConstatGuide.astro`. Keep the page static and light (no scripts, no external resources): it is read at the roadside.
+- French labels must stay exactly as printed on the official form; `public/documents/constat-amiable-2023-cn.pdf` is the printable reference translation and the two must agree. The scene steps mirror the FAQ item `minor-accident-first-steps`.
+- Wording is reference material, not advice; changes to it are reviewed by Jacques before going live.
+
 ### Contact form
 
 The contact form (`src/pages/{lang}/contact.astro`) submits via `fetch` to `/.netlify/functions/submit-contact`, handled by `netlify/functions/submit-contact.js`. That function:
@@ -95,7 +109,7 @@ Tailwind CSS (via `@astrojs/tailwind`) with a custom brand palette defined in `t
 
 ### Deployment
 
-`netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. A catch-all redirect (`/*` → `/index.html`, 200) is in place for client-side routing. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
+`netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. Unknown URLs get `dist/404.html` (there is no catch-all redirect; the site has no client-side routing). `netlify.toml` defines the short links `/shigu` and `/constat` → `/zh/constat`, and `/faq` → `/zh/faq`; they are meant for print and QR codes, so keep them working. `astro.config.mjs` allows dev-server hosts `appolo.smartcubes.uk` and `apolloins.ca`.
 
 Netlify (hosting) is managed under the `info@apolloins.ca` account: site `superb-caramel-0ef0d0`, serving `www.apolloins.ca`, auto-deploying from `apolloins/apollo` `main`. The site env vars `RESEND_API_KEY`, `ADMIN_EMAIL` and `FROM_EMAIL` live only in Netlify. Cloudflare (DNS + proxy) and Resend are under the same account; Resend sends from the verified domain `apolloins.ca` (DNS records `resend._domainkey`, `send`, `rsend`, `_dmarc` in Cloudflare), so the sender must be `@apolloins.ca`, not the former `@notifications.apolloins.ca`. The site was moved from the old Netlify account (`apolloassurance@gmail.com`, site `apolloassurance`) on 2026-10-06; the old site is kept, without a domain, as a fallback. API tokens are kept locally outside the repo (git-ignored `.secret` / `.env`), never committed.
 

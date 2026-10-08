@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getConstat, constatLinks, type Lang } from '../lib/constat';
+
+// Built for a phone held at the roadside: one column, large type, no
+// scripts and no external resources.
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = getConstat(lang);
+const external = { target: '_blank', rel: 'noopener noreferrer' };
+---
+
+<BaseLayout title={t.title} description={t.description} lang={lang}>
+  <section class="bg-gradient-to-r from-primary to-accent text-white py-8 md:py-12">
+    <div class="container max-w-2xl">
+      <h1 class="text-2xl md:text-3xl lg:text-4xl">{t.title}</h1>
+      <p class="mt-2 text-sm md:text-base opacity-90">{t.heroSubtitle}</p>
+    </div>
+  </section>
+
+  <div class="container max-w-2xl py-6 space-y-8">
+    <p class="bg-red-600 text-white text-lg font-semibold rounded-lg px-4 py-3">{t.emergency}</p>
+
+    <nav class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-sm font-medium">
+      <a href="#scene" class="bg-white rounded-md shadow-sm px-2 py-3 text-primary">{t.nav.scene}</a>
+      <a href="#form" class="bg-white rounded-md shadow-sm px-2 py-3 text-primary">{t.nav.form}</a>
+      <a href="#no-form" class="bg-white rounded-md shadow-sm px-2 py-3 text-primary">{t.nav.noForm}</a>
+      <a href="#print" class="bg-white rounded-md shadow-sm px-2 py-3 text-primary">{t.nav.print}</a>
+    </nav>
+
+    <p class="text-sm border-l-4 border-secondary bg-white rounded-r-md px-4 py-3">{t.notice}</p>
+
+    <section id="scene" class="scroll-mt-24">
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.sceneTitle}</h2>
+      <ol class="space-y-3">
+        {t.scene.map((step, i) => (
+          <li class="flex gap-3 bg-white rounded-lg shadow-sm p-4">
+            <span class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-bold">{i + 1}</span>
+            <div>
+              <p class="font-semibold text-lg">{step.title}</p>
+              <p>{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section>
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.flowTitle}</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <p class="mb-3">{t.flowIntro}</p>
+        <ol class="list-decimal ml-5 space-y-2">
+          {t.flow.map(step => <li>{step}</li>)}
+        </ol>
+        <p class="mt-4 font-semibold text-primary">{t.flowNote}</p>
+      </div>
+    </section>
+
+    <section id="form" class="scroll-mt-24">
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-2">{t.formTitle}</h2>
+      <p class="text-sm text-dark/70 mb-4">{t.formIntro}</p>
+      <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+        <p class="font-semibold" lang="fr">{t.purpose.fr}</p>
+        {t.purpose.local && <p class="text-primary mt-1">{t.purpose.local}</p>}
+      </div>
+
+      {t.sections.map(section => (
+        <div class="mb-6 last:mb-0">
+          <div class="bg-primary text-white rounded-t-lg px-4 py-3">
+            <p class="font-bold" lang="fr">{section.fr}</p>
+            {section.local && <p class="text-secondary font-semibold">{section.local}</p>}
+          </div>
+          <p class="bg-secondary/20 text-sm px-4 py-2">{section.note}</p>
+          <div class="bg-white rounded-b-lg shadow-sm">
+            {section.blocks.map(block => (
+              <div>
+                {block.fr && (
+                  <div class="bg-light px-4 py-2 border-y border-gray-200">
+                    <p class="font-bold text-primary" lang="fr">{block.fr}</p>
+                    {block.local && <p class="font-semibold">{block.local}</p>}
+                  </div>
+                )}
+                <dl class="divide-y divide-gray-100">
+                  {block.fields.map(field => (
+                    <div class="px-4 py-3">
+                      <dt class="font-semibold" lang="fr">{field.fr}</dt>
+                      {field.local && <dd class="text-primary text-lg">{field.local}</dd>}
+                      {field.hint && <dd class="text-sm text-dark/70">{field.hint}</dd>}
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <section id="no-form" class="scroll-mt-24">
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.noFormTitle}</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <p class="mb-4">{t.noFormText}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+          <a href={constatLinks.onlineFr} {...external} class="btn-primary text-center">{t.onlineFr}</a>
+          <a href={constatLinks.onlineEn} {...external} class="btn-primary text-center">{t.onlineEn}</a>
+        </div>
+        <p class="font-semibold mb-2">{t.checklistTitle}</p>
+        <ul class="list-disc ml-5 space-y-1">
+          {t.checklist.map(item => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.tipsTitle}</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <ul class="list-disc ml-5 space-y-2">
+          {t.tips.map(tip => <li>{tip}</li>)}
+        </ul>
+        <p class="mt-4 text-sm text-dark/70">{t.tipsNote}</p>
+      </div>
+    </section>
+
+    <section id="print" class="scroll-mt-24">
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.printTitle}</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4 border-l-4 border-secondary">
+        <p class="mb-4">{t.printText}</p>
+        <div class="grid grid-cols-1 gap-3">
+          <a href={constatLinks.blankFr} {...external} class="btn-primary text-center">{t.printFr}</a>
+          <a href={constatLinks.referenceCn} {...external} class="btn bg-light text-dark border border-gray-300 hover:bg-gray-100 text-center">{t.printCn}</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-xl md:text-2xl lg:text-2xl mb-4">{t.contactTitle}</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+        <p class="mb-4">{t.contactText}</p>
+        <a href={`tel:${constatLinks.phone}`} class="btn-secondary text-lg w-full sm:w-auto">{t.callJacques}</a>
+        <p class="mt-3 text-sm">{t.wechat}</p>
+        <p class="mt-4"><a href={`/${lang}/claims`} class="text-primary hover:underline">{t.claimsLink} →</a></p>
+      </div>
+    </section>
+
+    <p class="text-xs text-dark/60">{t.disclaimer}</p>
+  </div>
+</BaseLayout>

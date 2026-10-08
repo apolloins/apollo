@@ -1,0 +1,12 @@
+---
+import FaqQuestion from '../../../components/FaqQuestion.astro';
+import { getFaq } from '../../../lib/faq';
+
+export function getStaticPaths() {
+  return getFaq('zh-hant').flatMap(g => g.items).map(item => ({ params: { slug: item.slug }, props: { item } }));
+}
+
+const { item } = Astro.props;
+---
+
+<FaqQuestion lang="zh-hant" item={item} />
