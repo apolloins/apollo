@@ -107,6 +107,8 @@ The contact form (`src/pages/{lang}/contact.astro`) submits via `fetch` to `/.ne
 
 Tailwind CSS (via `@astrojs/tailwind`) with a custom brand palette defined in `tailwind.config.mjs`: `primary` (#1F4E79), `secondary` (#FFC000), `accent` (#4472C4), `light` (#F2F2F2), `dark` (#333333). Use these tokens rather than raw hex/arbitrary colors for brand-consistent UI.
 
+Logo (redrawn 2026-10-09 from a reference image supplied by Jacques): a plain sun disc (no rays) with a brush-style A in front (thin left stroke, heavy right stroke, crossbar sweeping up to the right), in `primary`/`secondary`. A mask cuts a gap between the A and the sun. The geometry lives in two places that must stay identical: `src/components/Logo.astro` (header, Tailwind classes) and `public/favicon.svg` (hard-coded colours, white A in dark mode). The PNG icons are rendered from the SVG, e.g. `nix run nixpkgs#resvg -- -w 32 public/favicon.svg public/favicon-32.png`; `apple-touch-icon.png` is 180x180 with an opaque white background and a margin around the mark (render a copy of the SVG with a white rect and a wider viewBox). Pending: Jacques's review of the live version; the reference used a brighter blue than `primary`, which was kept on purpose.
+
 ### Deployment
 
 `netlify.toml` builds with `npm run build`, publishes `dist/`, and points Netlify Functions at `netlify/functions/`. Unknown URLs get `dist/404.html` (there is no catch-all redirect; the site has no client-side routing). `netlify.toml` defines the short links `/shigu` and `/constat` → `/zh/constat`, and `/faq` → `/zh/faq`; they are meant for print and QR codes, so keep them working. `@astrojs/sitemap` writes `sitemap-index.xml` (language pages only), referenced from `public/robots.txt`.
