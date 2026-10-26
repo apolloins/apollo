@@ -10,7 +10,9 @@ Software not already available locally may be installed ad hoc via `nix shell ni
 
 ## Project
 
-Marketing/informational website for Apollo Insurance (阿波罗保险公司 / Assurance Apollo), a sub-brand of AssurPV based in Brossard, Quebec, Canada, serving Chinese-speaking clients. Built with Astro + Tailwind CSS, deployed to Netlify (with a Netlify Function handling the contact form).
+Marketing/informational website for Apollo Insurance (阿波罗保险公司), a sub-brand of AssurPV based in Brossard, Quebec, Canada, serving Chinese-speaking clients. Built with Astro + Tailwind CSS, deployed to Netlify (with a Netlify Function handling the contact form).
+
+Company name on the English and French pages (since 2026-10-26): the registered names of the legal entity, **Apollo Assurance Inc.** (en) and **Assurance Apollo Inc.** (fr), as in the Quebec enterprise register (needed for the WeChat account verification). Chinese pages keep 阿波罗保险公司. The contact-form emails (`netlify/functions/submit-contact.js`) still use the older names.
 
 ## Commands
 

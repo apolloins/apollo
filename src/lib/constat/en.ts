@@ -122,7 +122,7 @@ export const constat = {
     'Names and phone numbers of any witnesses'
   ],
 
-  tipsTitle: 'Tips from Apollo Insurance',
+  tipsTitle: 'Tips from Apollo Assurance Inc.',
   tips: [
     'Each vehicle involved needs its own report, and the information on both forms should match.',
     'Completing and signing the form only identifies the parties involved; it is not an admission of liability.',
@@ -130,7 +130,7 @@ export const constat = {
     'Once completed, send us a photo or scan of the form as soon as you can, so we can help you follow up with the insurer’s claims adjuster.',
     'If the accident happens outside business hours, contact us by text message or WeChat as soon as possible and send a copy of the report.'
   ],
-  tipsNote: 'These are suggestions offered by Apollo Insurance as assistance. Claims are assessed and decided by the insurer’s claims adjuster.',
+  tipsNote: 'These are suggestions offered by Apollo Assurance Inc. as assistance. Claims are assessed and decided by the insurer’s claims adjuster.',
 
   printTitle: 'Better still: print it and keep it in the car',
   printText: 'You may have no signal or a dead battery when an accident happens. We suggest printing a blank official form now and keeping it in the car with your proof of insurance.',

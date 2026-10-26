@@ -100,7 +100,7 @@ export const constat = {
     'Le nom et le téléphone des témoins, s’il y a lieu'
   ],
 
-  tipsTitle: 'Conseils d’Assurance Apollo',
+  tipsTitle: 'Conseils d’Assurance Apollo Inc.',
   tips: [
     'Chaque véhicule impliqué doit avoir son propre constat, et les renseignements des deux formulaires doivent concorder.',
     'Remplir et signer le formulaire sert uniquement à identifier les parties en cause; ce n’est pas une reconnaissance de responsabilité.',
@@ -108,7 +108,7 @@ export const constat = {
     'Une fois le formulaire rempli, envoyez-nous-en une photo ou une copie numérisée dès que possible, afin que nous puissions vous aider dans le suivi auprès de l’expert en sinistre de l’assureur.',
     'Si l’accident survient en dehors des heures d’ouverture, communiquez avec nous par texto ou WeChat dès que possible et envoyez une copie du constat.'
   ],
-  tipsNote: 'Ces suggestions sont offertes par Assurance Apollo à titre d’assistance. L’évaluation et les décisions relatives au sinistre relèvent de l’expert en sinistre de l’assureur.',
+  tipsNote: 'Ces suggestions sont offertes par Assurance Apollo Inc. à titre d’assistance. L’évaluation et les décisions relatives au sinistre relèvent de l’expert en sinistre de l’assureur.',
 
   printTitle: 'Encore mieux : imprimez-le et gardez-le dans la voiture',
   printText: 'Au moment d’un accident, il se peut que vous n’ayez pas de réseau ou que votre téléphone soit déchargé. Nous vous suggérons d’imprimer dès maintenant un formulaire officiel vierge et de le garder dans la voiture avec votre attestation d’assurance.',
