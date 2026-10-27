@@ -127,10 +127,10 @@ export const faqGroups = [
   将车辆移至路边等安全位置，避免阻碍交通。</li>
 
   <li><strong>交换信息：</strong><br>
-  与对方司机交换驾照、车辆注册文件（Registration）和保险证明（Proof of Insurance）信息，并记录对方电话。</li>
+  与对方司机交换驾照、行车证（Registration）和保险证明（Proof of Insurance）信息，并记录对方电话。</li>
 
   <li><strong>填写事故报告：</strong><br>
-  与对方共同填写《联合报告》（Joint Report / Constat à l'amiable）。<br>
+  与对方共同填写《事故处理单》（Joint Report / Constat à l'amiable）。<br>
   即使有争议，也各自填写自己的部分。<br>
   建议车上常备此表格。<br>
   无需等待警察（除非有人受伤或严重争议）。</li>
